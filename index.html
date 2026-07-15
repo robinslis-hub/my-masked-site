@@ -1,29 +1,106 @@
-// ==UserScript==
-// @name         Poki Name Changer naar Klas
-// @namespace    http://tampermonkey.net
-// @version      1.0
-// @description  Verandert de naam/nickname op Poki automatisch naar 'klas'
-// @author       Je Naam
-// @match        https://*://*
-// @grant        none
-// @run-at       document-end
-// ==/UserScript==
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Oefenen - Klas Mod</title>
+    <style>
+        /* Blauwe achtergrond die matcht met je huidige website */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
 
-(function() {
-    'use strict';
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
 
-    // Functie die zoekt naar tekst/naamvelden op de pagina en deze aanpast
-    function changeToKlas() {
-        // Vervang deze selectors op basis van het specifieke spel of profielveld
-        let nameFields = document.querySelectorAll('.username, .profile-name, #player-name');
+        /* Het originele Spellingoefenen logo met het bekende aapje */
+        .logo {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 25px;
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5));
+        }
+
+        .input-box {
+            width: 80%;
+            padding: 12px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .status-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #a3e635;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-text.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Officieel logo van spellingoefenen.nl geladen via hun servers -->
+        <img class="logo" src="https://spellingoefenen.nl" alt="Spellingoefenen.nl Logo">
         
-        nameFields.forEach(field => {
-            field.innerText = 'klas';
-            field.value = 'klas';
-        });
-    }
+        <p>Voer hier je scriptnaam in:</p>
+        <!-- Het invoerveld dat automatisch op 'klas' wordt gezet -->
+        <input type="text" id="nameInput" class="input-box" value="klas" placeholder="Naam invullen...">
+        
+        <div id="status" class="status-text">Naam succesvol ingesteld op 'klas'!</div>
+    </div>
 
-    // Voer de functie direct uit en herhaal voor dynamisch ladende spellen
-    changeToKlas();
-    setInterval(changeToKlas, 2000); 
-})();
+    <script>
+        // JavaScript om ervoor te zorgen dat de naam altijd 'klas' blijft
+        const nameInput = document.getElementById('nameInput');
+        const statusText = document.getElementById('status');
+
+        function forceKlasName() {
+            if (nameInput.value !== 'klas') {
+                nameInput.value = 'klas';
+                
+                // Toon kort een statusmelding op het scherm
+                statusText.classList.add('visible');
+                setTimeout(() => {
+                    statusText.classList.remove('visible');
+                }, 1500);
+            }
+        }
+
+        // Controleer continu (elke 500ms) of de naam is veranderd
+        setInterval(forceKlasName, 500);
+
+        // Voorkom dat de gebruiker de tekst handmatig weghaalt via invoer
+        nameInput.addEventListener('input', forceKlasName);
+    </script>
+
+</body>
+</html>
